@@ -7,6 +7,7 @@ import prettier from "eslint-plugin-prettier";
 import parser from "@typescript-eslint/parser";
 // "lint": "eslint . --ext .ts",
 // "lint": "eslint . --ignore-pattern '.next/**'",
+// some npx command use to resolve the .next folder issue
 
 module.exports = {
   ignores: [".next/"],
