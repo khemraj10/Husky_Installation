@@ -7,11 +7,14 @@
     "build": "next build",
     "start": "next start",
     "generate": "graphql-codegen",
-    "lint": "eslint . --ignore-pattern '.next/**'",
+    "lint": "eslint . --ignore-pattern .next/",
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
     "format": "prettier --write .",
     "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": "eslint --cache --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -45,7 +48,7 @@
     "eslint-config-next": "15.1.6",
     "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-prettier": "^5.2.3",
-    "husky": "^8.0.0",
+    "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
     "postcss": "^8",
     "prettier": "^3.5.2",

@@ -6,8 +6,10 @@ import prettier from "eslint-plugin-prettier";
 // const parser = require("@typescript-eslint/parser");
 import parser from "@typescript-eslint/parser";
 // "lint": "eslint . --ext .ts",
+// "lint": "eslint . --ignore-pattern '.next/**'",
 
 module.exports = {
+  ignores: [".next/"],
   ignorePatterns: [
     ".next/**",
     "node_modules/**",
@@ -18,21 +20,24 @@ module.exports = {
     "public",
     "abis",
   ],
-  overrides: [
-    {
-      files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
-      languageOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
-      },
-      extends: ["next", "plugin:prettier/recommended", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
-      plugins: { prettier: prettier, "@typescript-eslint": parser },
-      rules: {
-        "prettier/prettier": ["error"],
-        "no-console": "warn",
-        "@typescript-eslint/no-explicit-any": "off",
-        semi: ["warn", "always"],
-      },
-    },
+  files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+  languageOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
+  },
+  extends: [
+    "next",
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:prettier/recommended",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
   ],
+  plugins: { prettier: prettier, "@typescript-eslint": parser },
+  rules: {
+    "prettier/prettier": ["error"],
+    "no-console": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    semi: ["warn", "always"],
+  },
 };
