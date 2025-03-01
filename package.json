@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "generate": "graphql-codegen",
-    "lint": "eslint . --ignore-pattern .next/",
+    "lint": "eslint . --ext .ts --ignore-pattern .next/",
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
     "format": "prettier --write .",
