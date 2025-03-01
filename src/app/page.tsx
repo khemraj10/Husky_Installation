@@ -4,10 +4,6 @@ import React, { useRef, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// interface OTPFormProps {
-//   onSubmit: (otp: string) => void;
-// }
-
 const OTPValidationSchema = Yup.object().shape({
   otp: Yup.string()
     .length(6, "OTP must be exactly 6 digits")
@@ -16,49 +12,49 @@ const OTPValidationSchema = Yup.object().shape({
 });
 
 const OTPForm = () => {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
   useEffect(() => {
-    if (inputRefs.current[0]) {
-      inputRefs.current[0].focus();
-    }
+    inputRefs.current[0]?.focus();
   }, []);
 
   const formik = useFormik({
     initialValues: { otp: "" },
     validationSchema: OTPValidationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       console.log("OTP Submitted:", values.otp);
-      // onSubmit(values.otp);
+
+      resetForm();
+      inputRefs.current[0]?.focus();
     },
   });
 
-  // Ensure the OTP value always has 6 characters
-  const otpValue = formik.values.otp.padEnd(6, "");
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const { value } = e.target;
-    if (!/^[0-9]?$/.test(value)) return; // allow only a single digit
+    if (!/^\d?$/.test(value)) return;
 
-    const otpArray = otpValue.split("");
+    const otpArray = formik.values.otp.split("");
     otpArray[index] = value;
-    formik.setFieldValue("otp", otpArray.join(""));
+    const newOtp = otpArray.join("").slice(0, 6);
+    formik.setFieldValue("otp", newOtp);
 
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
+    }
+
+    if (newOtp.length === 6) {
+      formik.submitForm();
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === "Backspace") {
-      const otpArray = otpValue.split("");
-      if (otpArray[index]) {
-        // Clear current field if it has a value
-        otpArray[index] = "";
-        formik.setFieldValue("otp", otpArray.join(""));
-      } else if (index > 0) {
-        // If already empty, move focus to previous field
-        inputRefs.current[index - 1]?.focus();
+      const otpArray = formik.values.otp.split("");
+      otpArray[index] = "";
+      formik.setFieldValue("otp", otpArray.join(""));
+
+      if (index > 0) {
+        inputRefs.current[index - 1]?.focus(); // Move focus back
       }
     }
   };
@@ -74,11 +70,11 @@ const OTPForm = () => {
             key={index}
             ref={(el) => {
               inputRefs.current[index] = el;
-            }}
+            }} // ✅ Fixed ref assignment
             type="text"
             inputMode="numeric"
             maxLength={1}
-            value={otpValue[index]}
+            value={formik.values.otp[index] || ""}
             onChange={(e) => handleChange(e, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
             onBlur={() => formik.setFieldTouched("otp", true)}
